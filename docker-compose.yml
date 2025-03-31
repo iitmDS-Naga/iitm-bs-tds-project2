@@ -17,3 +17,61 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+
+  puppeteer:
+    image: mcp/puppeteer
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./mcp:/app/mcp
+    environment:
+      - NODE_ENV=development
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp=unconfined
+    shm_size: '1gb'
+    depends_on:
+      - api
+
+  github:
+    image: mcp/github
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./github:/app/github
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - api
+
+  brave-search:
+    image: mcp/brave-search
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./brave-search:/app/brave-search
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - BRAVE_API_KEY=${BRAVE_API_KEY}
+    depends_on:
+      - api
+
+  sqlite:
+    image: mcp/sqlite
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./sqlite:/app/sqlite
+      - ./data/sqlite:/var/lib/sqlite
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+      - SQLITE_DATABASE=/var/lib/sqlite/mcp.db
+    depends_on:
+      - api
