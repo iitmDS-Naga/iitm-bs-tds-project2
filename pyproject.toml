@@ -1,0 +1,14 @@
+[project]
+name = "iitm-bs-tds-project2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4>=4.13.3",
+    "fastapi>=0.115.12",
+    "pydantic>=2.11.1",
+    "pydantic-ai>=0.0.46",
+    "uvicorn>=0.34.0",
+    "openai>=1.12.0",
+]
