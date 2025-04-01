@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   api:
     build: .
@@ -18,7 +16,7 @@ services:
       timeout: 10s
       retries: 3
 
-  puppeteer:
+  mcp-puppeteer:
     image: mcp/puppeteer
     ports:
       - "3000:3000"
@@ -31,10 +29,10 @@ services:
     security_opt:
       - seccomp=unconfined
     shm_size: '1gb'
-    depends_on:
-      - api
+    networks:
+      - mcp-network
 
-  github:
+  mcp-github:
     image: mcp/github
     ports:
       - "3001:3001"
@@ -44,10 +42,10 @@ services:
       - .env
     environment:
       - NODE_ENV=development
-    depends_on:
-      - api
+    networks:
+      - mcp-network
 
-  brave-search:
+  mcp-brave-search:
     image: mcp/brave-search
     ports:
       - "3002:3002"
@@ -58,10 +56,10 @@ services:
     environment:
       - NODE_ENV=development
       - BRAVE_API_KEY=${BRAVE_API_KEY}
-    depends_on:
-      - api
+    networks:
+      - mcp-network
 
-  sqlite:
+  mcp-sqlite:
     image: mcp/sqlite
     ports:
       - "3003:3003"
@@ -73,5 +71,9 @@ services:
     environment:
       - NODE_ENV=development
       - SQLITE_DATABASE=/var/lib/sqlite/mcp.db
-    depends_on:
-      - api
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    driver: bridge
